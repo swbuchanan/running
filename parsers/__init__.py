@@ -1,3 +1,4 @@
+from pathlib import Path
 from .gpx import GPXParser
 from .fit import FitParser
 from .fit_gz import FitGzParser
@@ -8,7 +9,7 @@ PARSERS = [
     FitGzParser(),
 ]
 
-def get_parser_for(path):
+def get_parser_for(path: Path):
     for parser in PARSERS:
         if parser.can_parse(path):
             return parser
