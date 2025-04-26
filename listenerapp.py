@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
 
-from config import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, VERIFY_TOKEN
+from config import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, VERIFY_TOKEN, AUTH_CODE
 
 
 app = Flask(__name__)
@@ -34,6 +34,7 @@ def webhook():
     """
     event = request.get_json()
     app.logger.info("Event received: %s", event)
+    print(f"Event uploaded: {event}")
     return ("EVENT_RECEIVED", 200)
 
 def create_subscription(callback_url):
@@ -41,6 +42,9 @@ def create_subscription(callback_url):
     Call Strava's API to subscribe your app.  You only need
     to run this once (or whenever you restart ngrok's URL).
     """
+
+
+
     print('trying to create subscription')
     resp = requests.post(
         "https://www.strava.com/api/v3/push_subscriptions",
@@ -48,7 +52,7 @@ def create_subscription(callback_url):
             'client_id': STRAVA_CLIENT_ID,
             'client_secret': STRAVA_CLIENT_SECRET,
             'callback_url': f'{callback_url}/webhook',
-            'verify_token': VERIFY_TOKEN
+            'verify_token': VERIFY_TOKEN,
         }
     )
     print(resp.status_code, resp.text)
@@ -61,14 +65,13 @@ if __name__ == '__main__':
     # public_url = ngrok.connect(5000, bind_tls=True)
     # print(" * ngrok tunnel:", public_url)
 
-    public_url = '''
-https://993a-150-203-68-68.ngrok-free.app
-'''
+#     public_url = '''
+# https://993a-150-203-68-68.ngrok-free.app
+# '''
 
     # 2) Optionally auto-register your webhook:
 
     # 3) Run your Flask server
     app.run(host='0.0.0.0', port=5000, debug=True)
 
-    create_subscription(public_url)
-
+    # create_subscription(public_url)

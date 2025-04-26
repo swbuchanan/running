@@ -8,3 +8,4 @@ load_dotenv()
 STRAVA_CLIENT_ID    = os.environ['STRAVA_CLIENT_ID']
 STRAVA_CLIENT_SECRET= os.environ['STRAVA_CLIENT_SECRET']
 VERIFY_TOKEN        = os.environ['STRAVA_VERIFY_TOKEN']
+AUTH_CODE           = os.environ['AUTH_CODE']
