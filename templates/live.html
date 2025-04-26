@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {# 1) Inline your static routes map: #}
+  {% include "all_routes.html" %}
+
+  {# 2) Now add your live-position script: #}
+  <script>
+    // after your Folium code runs, it will have done something like:
+    //   var map_abc123 = L.map('map_abc123', { … });
+    // We need to grab that map instance.  Luckily Folium exposes it globally.
+    // Find the first L.Map on the page:
+    var map = Object.values(window).find(v => v instanceof L.Map);
+    if (!map) {
+      console.error("Couldn't find your Leaflet map instance!");
+    } else if (!navigator.geolocation) {
+      alert("Geolocation not supported by this browser");
+    } else {
+      // Watch position & update a marker
+      let userMarker;
+      navigator.geolocation.watchPosition(pos => {
+        const latlng = [pos.coords.latitude, pos.coords.longitude];
+        if (userMarker) {
+          userMarker.setLatLng(latlng);
+        } else {
+          userMarker = L.marker(latlng)
+            .addTo(map)
+            .bindPopup("You are here")
+            .openPopup();
+        }
+        // Optionally, pan or zoom the map to follow
+        map.panTo(latlng);
+      }, err => {
+        console.error("Geolocation error:", err);
+      }, {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 10000
+      });
+    }
+  </script>
+
+{% endblock %}

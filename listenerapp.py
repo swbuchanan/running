@@ -1,10 +1,43 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import requests
+from pyngrok import ngrok
+import folium
+from folium.plugins import LocateControl
+
 
 from config import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, VERIFY_TOKEN, AUTH_CODE
 
 
 app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    """
+    This creates the map with the live view.
+    """
+    # m = folium.Map(location=(0,0),prefer_canvas=True)
+
+    # LocateControl(auto_start=True,
+    #               circleStyle = {'interactive': True},
+    #                 locateOptions={
+    #                     'watch': True,
+    #                     'enableHighAccuracy': True,
+    #                     'timeout': 10000,
+    #                     'maximumAge': 0,
+    #                     'prefer_canvas': True
+    #                     }
+    #               ).add_to(m) #
+    # # html = m.get_root().render()
+    # # html = html.replace(
+    # #     'L.map(',
+    # #     'L.map( /* injected */ {preferCanvas: true,},'
+    # # )
+    # # with open('all_routes.html','w') as f:
+    # #     f.write(html)
+    # return render_template("all_routes.html", map_html=html)
+    return render_template("live.html")
+
 
 
 @app.route('/webhook', methods=['GET'])
@@ -43,8 +76,6 @@ def create_subscription(callback_url):
     to run this once (or whenever you restart ngrok's URL).
     """
 
-
-
     print('trying to create subscription')
     resp = requests.post(
         "https://www.strava.com/api/v3/push_subscriptions",
@@ -60,18 +91,4 @@ def create_subscription(callback_url):
     print("Subscription created:", resp.json())
 
 if __name__ == '__main__':
-    # 1) Start ngrok first so you know public_url
-    # from pyngrok import ngrok
-    # public_url = ngrok.connect(5000, bind_tls=True)
-    # print(" * ngrok tunnel:", public_url)
-
-#     public_url = '''
-# https://993a-150-203-68-68.ngrok-free.app
-# '''
-
-    # 2) Optionally auto-register your webhook:
-
-    # 3) Run your Flask server
     app.run(host='0.0.0.0', port=5000, debug=True)
-
-    # create_subscription(public_url)
