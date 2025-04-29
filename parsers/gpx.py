@@ -12,6 +12,7 @@ class GPXParser(RouteParser):
 
         coords = []
         for track in gpx.tracks:
+            print(track.type)
             for segment in track.segments:
                 for point in segment.points:
                     coords.append((point.latitude, point.longitude))

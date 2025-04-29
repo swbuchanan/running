@@ -66,14 +66,14 @@ def main():
     print("All routes plotted → all_routes.html")
 
 if __name__ == "__main__":
-    #    main()
-    test_file = Path("test.fit.gz")
-    parser = get_parser_for(test_file)
-    coords = parser.parse(test_file)
-    # raw_semicircles is the int from rec.get_raw_value('position_lat')
-    converted_coords = [ tuple( [ x * 180 / 2**31 for x in coord] ) for coord in coords ]
+       main()
+    # test_file = Path("test.fit.gz")
+    # parser = get_parser_for(test_file)
+    # coords = parser.parse(test_file)
+    # # raw_semicircles is the int from rec.get_raw_value('position_lat')
+    # converted_coords = [ tuple( [ x * 180 / 2**31 for x in coord] ) for coord in coords ]
 
-    # print(converted_coords)
-    plot_route(converted_coords, "testing.html")
+    # # print(converted_coords)
+    # plot_route(converted_coords, "testing.html")
     # 
 
