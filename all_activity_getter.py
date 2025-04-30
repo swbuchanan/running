@@ -1,5 +1,10 @@
-from strava2gpx.src.strava2gpx import strava2gpx
+from strava2gpx.src.strava2gpx import Strava2GPX
 import asyncio
+
+"""
+Use the strava2gpx library, which I'm in the process of refactoring a bit,
+to fetch all of my activities
+"""
 
 from config import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, VERIFY_TOKEN, AUTH_CODE, REFRESH_TOKEN
 
@@ -9,7 +14,7 @@ async def main():
     '''
 
     # create an instance of strava2gpx
-    s2g = strava2gpx(STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, REFRESH_TOKEN)
+    s2g = Strava2GPX(STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, REFRESH_TOKEN)
 
     # connect to the Strava API
     await s2g.connect()
