@@ -1,6 +1,7 @@
 from pathlib import Path
 import folium
 from parsers import get_parser_for
+from gpxpy.gpx import GPXXMLSyntaxException
 
 DIR = 'gpx'
 
@@ -43,7 +44,13 @@ def main():
         except ValueError:
             continue  # skip unsupported extensions
 
-        coords = parser.parse(path)
+        try:
+            coords = parser.parse(path)
+        except GPXXMLSyntaxException:
+            print(f"I think there are no coordinates in activity {path}. This may be a treadmill workout.")
+            continue
+
+
         try:
             folium.PolyLine(
                 coords,
