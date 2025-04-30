@@ -4,7 +4,7 @@ from pyngrok import ngrok
 import folium
 from folium.plugins import LocateControl
 from register_webhook import authorize
-from strava2gpx import strava2gpx
+from strava2gpx.src.strava2gpx import strava2gpx
 import _asyncio
 
 
