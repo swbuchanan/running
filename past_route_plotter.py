@@ -8,11 +8,13 @@ import json
 
 DIR = 'gpx'
 
+df = pd.DataFrame(columns=['name', 'id', 'coords']) # TODO: I also want to store the date
+
+
 try:
     df = pd.read_csv('all_routes.csv')
 except FileNotFoundError:
-    df = pd.DataFrame(columns=['name', 'id', 'coords']) # TODO: I also want to store the date
-
+    print("Could not find list of past routes. Starting with a new list.")
 
 def plot_route(coords, out_html):
     avg_lat = sum(lat for lat, _ in coords) / len(coords)
@@ -22,6 +24,9 @@ def plot_route(coords, out_html):
     m.save(out_html)
 
 def main():
+    global df
+
+    routes_list = []
 
     # 1. Collect all GPX, FIT, FIT.GZ files in cwd
     files = [p for p in Path(DIR).iterdir() if p.is_file()]
@@ -63,7 +68,7 @@ def main():
             folium.PolyLine(
                 coords,
                 # color=colors[idx % len(colors)],
-                color = f'rgb({random.randint(0, 255)}, {random.randint(0, 255)}, {random.randint(0, 255)})',
+                color = f'rgb({random.randint(0, 70)}, {random.randint(0, 70)}, {random.randint(200, 255)})',
                 weight=3,
                 opacity=0.7,
                 tooltip=path.name
@@ -74,7 +79,8 @@ def main():
                 'id': path.name,
                 'coords': coords
             }
-            df.append(new_route, ignore_index=True)
+            # df.append(new_route, ignore_index=True)
+            routes_list.append(new_route)
             print(f'added {path} to dataframe')
         except ValueError: # not sure what this is but one time I got ValueError("Locations is empty")
             print('valueerror')
@@ -86,6 +92,8 @@ def main():
 
 # 6. Save single HTML
     m.save('all_routes.html')
+    new_routes = pd.DataFrame(routes_list)
+    df = pd.concat([df, new_routes])
     df.to_csv('all_routes.csv', index=False)
     print("All routes plotted → all_routes.html")
     print("All routes saved → all_routes.csv")
