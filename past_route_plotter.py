@@ -2,8 +2,17 @@ from pathlib import Path
 import folium
 from parsers import get_parser_for
 from gpxpy.gpx import GPXXMLSyntaxException
+import random
+import pandas as pd
+import json
 
 DIR = 'gpx'
+
+try:
+    df = pd.read_csv('all_routes.csv')
+except FileNotFoundError:
+    df = pd.DataFrame(columns=['name', 'id', 'coords']) # TODO: I also want to store the date
+
 
 def plot_route(coords, out_html):
     avg_lat = sum(lat for lat, _ in coords) / len(coords)
@@ -50,16 +59,23 @@ def main():
             print(f"I think there are no coordinates in activity {path}. This may be a treadmill workout.")
             continue
 
-
         try:
             folium.PolyLine(
                 coords,
-                color=colors[idx % len(colors)],
+                # color=colors[idx % len(colors)],
+                color = f'rgb({random.randint(0, 255)}, {random.randint(0, 255)}, {random.randint(0, 255)})',
                 weight=3,
                 opacity=0.7,
                 tooltip=path.name
             ).add_to(m)
             print(f'parsed {path}')
+            new_route = {
+                'name': path,
+                'id': path.name,
+                'coords': coords
+            }
+            df.append(new_route, ignore_index=True)
+            print(f'added {path} to dataframe')
         except ValueError: # not sure what this is but one time I got ValueError("Locations is empty")
             print('valueerror')
             pass
@@ -70,7 +86,10 @@ def main():
 
 # 6. Save single HTML
     m.save('all_routes.html')
+    df.to_csv('all_routes.csv', index=False)
     print("All routes plotted → all_routes.html")
+    print("All routes saved → all_routes.csv")
+
 
 if __name__ == "__main__":
        main()
