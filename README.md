@@ -24,6 +24,10 @@ Now, before you go on a run, start the app with
 `make serve` and then `make serve-app`, followed by `make register`.
 The `make register` command will need to be done about once a day; the access token that you get from this process is only temporary, and there is a script run by this command that will refresh it.
 
+# My progress
+
+See my [blog post](https://stevenbuchanan.net/posts/running-canberra/) for a a link to my map with current progress.
+
 ## to-do:
 - a lot of running
 - a more organized database of runs
